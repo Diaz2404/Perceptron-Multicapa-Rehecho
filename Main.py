@@ -114,13 +114,9 @@ y_esperado = np.array([
     [0,0,0,0,0,0,0,0,0,1]])   
 
 
-i , w , error = entrenamiento(entradas, y_esperado, Activacion_oculto = activacion_logistica, Activacion_salida= activacion_logistica, derivada_oculto= activacion_logistica_derivada , derivada_salida=activacion_logistica_derivada, neuronas_ocultas= 4, neuronas_salidas= 10, cota = 10000, n= 0.1)
+i , w , error = entrenamiento(entradas, y_esperado, Activacion_oculto = activacion_logistica, Activacion_salida= activacion_logistica, derivada_oculto= activacion_logistica_derivada , derivada_salida=activacion_logistica_derivada, neuronas_ocultas= 4, neuronas_salidas= 10, cota = 7000, n= 0.01)
 
-# w_oculto = np.zeros((4, entradas.shape[1]))
-# print(f"Entradas: {entradas[0]}, y_esperado: {w_oculto[0], {entradas.shape}, {w_oculto.shape}}")
-# resultado =entradas[0] @ w_oculto[0] +1
-# print(f"Resultado: {resultado}, type: {type(resultado)}")
-
+print(f"Iteraciones: {i}, Error: {error}")
 
 # # Predecimos los digitos sin ruido
 # for i in range(10):

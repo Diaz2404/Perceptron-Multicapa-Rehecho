@@ -1,26 +1,20 @@
 import numpy as np
 
 def entrenamiento(entradas, y_esperado, Activacion_oculto, Activacion_salida, derivada_oculto, derivada_salida, neuronas_ocultas, neuronas_salidas, cota=10000, n=0.1):
-    # Creamos los pesos que conectan la capa de entrada con la capa oculta, fila= cant neuronas ocultas, columna= entrada
-    w_oculto = np.zeros((neuronas_ocultas, entradas.shape[1]))
-    # Creamos los pesos que conectan la capa oculto con la capa de salida, fila= cant de salidas, columna= cant neurdonas ocultas
-    w_salida = np.zeros((neuronas_salidas, neuronas_ocultas))
 
-    # entradas matriz de 10x35
-    # w_oculto matriz de 4x35
-    # w_salida matriz de 10x4
+    w_oculto = np.random.uniform(-1, 1, (neuronas_ocultas, entradas.shape[1]))
+    w_salida = np.random.uniform(-1, 1, (neuronas_salidas, neuronas_ocultas))
   
 
-    
-    error_min = 80
+    error_min = float('inf')
     w_min = [w_oculto.copy(), w_salida.copy()]
     i_cota = 0
     p = len(entradas)
 
     while i_cota < cota:
         i_x = np.random.randint(0, p)
-        x_i = entradas[i_x]   # un vector de 35 elementos
-        y_i = y_esperado[i_x] # un vector de 10 elementos
+        x_i = entradas[i_x]   
+        y_i = y_esperado[i_x] 
 
         # Progagación hacia adelante
         # Capa oculta
@@ -62,7 +56,7 @@ def entrenamiento(entradas, y_esperado, Activacion_oculto, Activacion_salida, de
         for i_4 in range(len(delta_oculto)):
             sumatoria = 0
             for j_1 in range(len(delta_salida)):
-                sumatoria += w_salida[j_1][i_4] * delta_salida[j_1]
+                sumatoria +=  delta_salida[j_1] * w_salida[j_1][i_4] 
                 # print(f"sumatoria += w_salida[{j_1}][{i_4}] * delta_salida[{j_1}] = {w_salida[j_1][i_4]} * {delta_salida[j_1]} = {w_salida[j_1][i_4] * delta_salida[j_1]}, sumatoria = {sumatoria}")
             delta_oculto[i_4] = derivada_oculto(h_oculto[i_4]) * sumatoria
         #     print(f"delta_oculto[{i_4}] = derivada_oculto(h_oculto[{i_4}]) * sumatoria = {derivada_oculto(h_oculto[i_4])} * {sumatoria} = {delta_oculto[i_4]}")
@@ -91,13 +85,12 @@ def entrenamiento(entradas, y_esperado, Activacion_oculto, Activacion_salida, de
 
         # print("\nCálculo del error total")
         # Cálculo del error
-        print("\nCálculo del error total")
-        error = 0
+        error_total = 0
         for muestra in range(p):
             x_i_error = entradas[muestra]
             y_i_error = y_esperado[muestra]
             #Propagacion hacia adelante
-            o_oculto_nuevo = np.zeros((neuronas_ocultas))
+            o_oculto_nuevo = np.zeros((neuronas_ocultas)) 
             for i_7 in range(neuronas_ocultas):
                 o_oculto_nuevo[i_7] = Activacion_oculto(w_oculto[i_7] @ x_i_error + 1)
             # Capa de salida
@@ -106,11 +99,14 @@ def entrenamiento(entradas, y_esperado, Activacion_oculto, Activacion_salida, de
                 o_salida_nuevo[i_8] = Activacion_salida(w_salida[i_8] @ o_oculto_nuevo + 1)
 
             # diferencia de la prediccion con el esperado, se resta elemento por elemento 
-            print(f"Parametros iterativos: {muestra}/{p}, y_i: {y_esperado[muestra]}, o_salida_nuevo: {o_salida_nuevo}, error: {error}")
+            # print(f"Parametros iterativos: {muestra}/{p}, y_i: {y_esperado[muestra]}, o_salida_nuevo: {o_salida_nuevo}\n")
             for i_9 in range(10):
-                error += (y_i_error[i_9] - o_salida_nuevo[i_9]) ** 2
-            error = error / 2
-            print(f"Error total sumado: {error}")
+                error_total += (y_i_error[i_9] - o_salida_nuevo[i_9]) ** 2
+                # print(f"error_total += (y_i_error[{i_9}] - o_salida_nuevo[{i_9}]) ** 2 = ({y_i_error[i_9]} - {o_salida_nuevo[i_9]}) ** 2 = {(y_i_error[i_9] - o_salida_nuevo[i_9]) ** 2}, error_total = {error_total}")
+        
+        error = error_total / 2
+        # print(f"Error total sumado: {error}")
+        # print(f"Error minimo: {error_min}")
 
         print(f"{i_cota} / {cota}, error total: {error}, error minimo: {error_min},")
 
